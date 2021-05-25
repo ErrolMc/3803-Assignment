@@ -1,79 +1,71 @@
-    // set the dimensions and margins of the graph
-    var margin = {top: 10, right: 30, bottom: 40, left: 50},
-    width = 520 - margin.left - margin.right,
-    height = 520 - margin.top - margin.bottom;
-    
-// append the svg object to the body of the page
-var svg = d3.select("#my_dataviz")
-  .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform",
-          "translate(" + margin.left + "," + margin.top + ")")
+var svg = d3.select("svg"),
+    margin = 20,
+    diameter = +svg.attr("width"),
+    g = svg.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
 
-// Add the grey background that makes ggplot2 famous
-svg
-  .append("rect")
-    .attr("x",0)
-    .attr("y",0)
-    .attr("height", height)
-    .attr("width", height)
-    .style("fill", "EBEBEB")
+var color = d3.scaleLinear()
+    .domain([-1, 5])
+    .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
+    .interpolate(d3.interpolateHcl);
 
-//Read the data
-d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/iris.csv", function(data) {
+var pack = d3.pack()
+    .size([diameter - margin, diameter - margin])
+    .padding(2);
 
-  // Add X axis
-  var x = d3.scaleLinear()
-    .domain([4*0.95, 8*1.001])
-    .range([ 0, width ])
-  svg.append("g")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x).tickSize(-height*1.3).ticks(10))
-    .select(".domain").remove()
+d3.json("flare.json", function(error, root) {
+  if (error) throw error;
 
-  // Add Y axis
-  var y = d3.scaleLinear()
-    .domain([-0.001, 9*1.01])
-    .range([ height, 0])
-    .nice()
-  svg.append("g")
-    .call(d3.axisLeft(y).tickSize(-width*1.3).ticks(7))
-    .select(".domain").remove()
+  root = d3.hierarchy(root)
+      .sum(function(d) { return d.size; })
+      .sort(function(a, b) { return b.value - a.value; });
 
-  // Customization
-  svg.selectAll(".tick line").attr("stroke", "white")
+  var focus = root,
+      nodes = pack(root).descendants(),
+      view;
 
-  // Add X axis label:
-  svg.append("text")
-      .attr("text-anchor", "end")
-      .attr("x", width/2 + margin.left)
-      .attr("y", height + margin.top + 20)
-      .text("Sepal Length");
+  var circle = g.selectAll("circle")
+    .data(nodes)
+    .enter().append("circle")
+      .attr("class", function(d) { return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; })
+      .style("fill", function(d) { return d.children ? color(d.depth) : null; })
+      .on("click", function(d) { if (focus !== d) zoom(d), d3.event.stopPropagation(); });
 
-  // Y axis label:
-  svg.append("text")
-      .attr("text-anchor", "end")
-      .attr("transform", "rotate(-90)")
-      .attr("y", -margin.left + 20)
-      .attr("x", -margin.top - height/2 + 20)
-      .text("Petal Length")
+  var text = g.selectAll("text")
+    .data(nodes)
+    .enter().append("text")
+      .attr("class", "label")
+      .style("fill-opacity", function(d) { return d.parent === root ? 1 : 0; })
+      .style("display", function(d) { return d.parent === root ? "inline" : "none"; })
+      .text(function(d) { return d.data.name; });
 
-  // Color scale: give me a specie name, I return a color
-  var color = d3.scaleOrdinal()
-    .domain(["setosa", "versicolor", "virginica" ])
-    .range([ "#F8766D", "#00BA38", "#619CFF"])
+  var node = g.selectAll("circle,text");
 
-  // Add dots
-  svg.append('g')
-    .selectAll("dot")
-    .data(data)
-    .enter()
-    .append("circle")
-      .attr("cx", function (d) { return x(d.Sepal_Length); } )
-      .attr("cy", function (d) { return y(d.Petal_Length); } )
-      .attr("r", 5)
-      .style("fill", function (d) { return color(d.Species) } )
+  svg
+      .style("background", color(-1))
+      .on("click", function() { zoom(root); });
 
-})
+  zoomTo([root.x, root.y, root.r * 2 + margin]);
+
+  function zoom(d) {
+    var focus0 = focus; focus = d;
+
+    var transition = d3.transition()
+        .duration(d3.event.altKey ? 7500 : 750)
+        .tween("zoom", function(d) {
+          var i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2 + margin]);
+          return function(t) { zoomTo(i(t)); };
+        });
+
+    transition.selectAll("text")
+      .filter(function(d) { return d.parent === focus || this.style.display === "inline"; })
+        .style("fill-opacity", function(d) { return d.parent === focus ? 1 : 0; })
+        .on("start", function(d) { if (d.parent === focus) this.style.display = "inline"; })
+        .on("end", function(d) { if (d.parent !== focus) this.style.display = "none"; });
+  }
+
+  function zoomTo(v) {
+    var k = diameter / v[2]; view = v;
+    node.attr("transform", function(d) { return "translate(" + (d.x - v[0]) * k + "," + (d.y - v[1]) * k + ")"; });
+    circle.attr("r", function(d) { return d.r * k; });
+  }
+});
