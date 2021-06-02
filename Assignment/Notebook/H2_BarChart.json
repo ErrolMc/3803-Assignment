@@ -1,0 +1,107 @@
+[
+    {
+       "sector":"Information & Communication Technology",
+       "values":[
+          {
+             "value":599.5,
+             "percent":"Top 5%"
+          },
+          {
+             "value":432.13,
+             "percent":"Top 25%"
+          },
+          {
+             "value":295.51,
+             "percent":"Top 50%"
+          },
+          {
+             "value":233.19,
+             "percent":"Top 75%"
+          }
+       ]
+    },
+    {
+       "sector":"Trades & Services",
+       "values":[
+          {
+             "value":141.08,
+             "percent":"Top 5%"
+          },
+          {
+             "value":93.65,
+             "percent":"Top 25%"
+          },
+          {
+             "value":77.22,
+             "percent":"Top 50%"
+          },
+          {
+             "value":65.29,
+             "percent":"Top 75%"
+          }
+       ]
+    },
+    {
+       "sector":"Healthcare & Medical",
+       "values":[
+          {
+             "value":599.5,
+             "percent":"Top 5%"
+          },
+          {
+             "value":304.22,
+             "percent":"Top 25%"
+          },
+          {
+             "value":195.98,
+             "percent":"Top 50%"
+          },
+          {
+             "value":149.81,
+             "percent":"Top 75%"
+          }
+       ]
+    },
+    {
+       "sector":"Hospitality & Tourism",
+       "values":[
+          {
+             "value":94.66,
+             "percent":"Top 5%"
+          },
+          {
+             "value":64.11,
+             "percent":"Top 25%"
+          },
+          {
+             "value":52.76,
+             "percent":"Top 50%"
+          },
+          {
+             "value":46.84,
+             "percent":"Top 75%"
+          }
+       ]
+    },
+    {
+       "sector":"Manufacturing, Transport & Logistics",
+       "values":[
+          {
+             "value":235.53,
+             "percent":"Top 5%"
+          },
+          {
+             "value":116.08,
+             "percent":"Top 25%"
+          },
+          {
+             "value":87.08,
+             "percent":"Top 50%"
+          },
+          {
+             "value":72.58,
+             "percent":"Top 75%"
+          }
+       ]
+    }
+ ]
