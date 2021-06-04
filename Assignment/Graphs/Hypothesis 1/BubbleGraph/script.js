@@ -5,7 +5,7 @@ var svg = d3.select("svg"),
 
 var color = d3.scaleLinear()
     .domain([-1, 5])
-    .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
+    .range(["hsl(451,92%,80%)", "hsl(358,30%,40%)"])
     .interpolate(d3.interpolateHcl);
 
 var pack = d3.pack()
@@ -41,7 +41,7 @@ d3.json("flare.json", function(error, root) {
   var node = g.selectAll("circle,text");
 
   svg
-      .style("background", color(-1))
+      .style("background", color(-6))
       .on("click", function() { zoom(root); });
 
   zoomTo([root.x, root.y, root.r * 2 + margin]);

@@ -1,4 +1,5 @@
 
+
 .node {
     cursor: pointer;
   }
@@ -13,9 +14,9 @@
   }
   
   .label {
-    font: 11px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font: 10px "Helvetica Neue", Helvetica, Arial, sans-serif;
     text-anchor: middle;
-    text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff, 0 -1px 0 #fff;
+    text-shadow: 0 1px 0 rgb(250, 242, 242), 1px 0 0 rgb(241, 236, 236), -1px 0 0 rgb(248, 240, 240), 0 -1px 0 #fff;
   }
   
   .label,
@@ -23,4 +24,3 @@
   .node--leaf {
     pointer-events: none;
   }
-  
