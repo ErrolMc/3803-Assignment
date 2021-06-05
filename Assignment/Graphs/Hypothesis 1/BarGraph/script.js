@@ -8,12 +8,12 @@ var tooltip = d3.select("body").append("div").attr("class", "toolTip");
 var x = d3.scaleBand().rangeRound([0, width]).padding(0.1),
     y = d3.scaleLinear().rangeRound([height, 0]);
   
-var colours = ["#6F257F", "#CA0D59"];
+var colours = ["#6F257F", "#DA0D59", "orange"];
 
 var g = svg.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.json("data.json", function(error, data) {
+d3.json("barData.json", function(error, data) {
     if (error) throw error;
 
     x.domain(data.map(function(d) { return d.area; }));
